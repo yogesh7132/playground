@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css">
+    <title>HTML Form</title>
+</head>
+<body>
+    <div class="container">
+        <form action="index.html" method="POST" autocomplete="off"> 
+            <label for="fname">First Name</label><br>
+            <input type="text" name="fname" id="fname"><br>
+            <label for="lname">Last Name</label><br>
+            <input type="text" name="lname" id="lname"><br>
+            <br>
+            <label for="gender">Gender</label><br>
+            <input type="radio" name="gender" id="male" value="male">
+            <label for="male">Male</label><br>
+            <input type="radio" name="gender" id="female" value="female">
+            <label for="female">Female</label><br>
+            <br>
+            <label for="vehicle">Select the vehicle you have ?</label><br>
+            <input type="checkbox" name="vehicle1" id="vehicle1" value="bike">
+            <label for="vehicle1">I have a Bike</label><br>
+            <input type="checkbox" name="vehicle2" id="vehicle2" value="car">
+            <label for="vehicle1">I have a Car</label><br>
+            <input type="checkbox" name="vehicle3" id="vehicle3" value="bus">
+            <label for="vehicle3">I have a Bus</label><br>
+            <br>
+            <input type="submit" value="Submit">
+
+        </form>
+    </div>
+</body>
+</html>
