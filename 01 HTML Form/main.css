@@ -1,0 +1,15 @@
+*{
+    margin:0;
+    padding:0;
+}
+
+body{
+    width:100%;
+    background-color: lightgray;
+}
+
+.container{
+    width:1120px;
+    margin:auto;
+    background-color: rgb(241, 237, 237);
+}
