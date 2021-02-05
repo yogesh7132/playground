@@ -4,7 +4,10 @@ let mongodb = require("mongodb")
 let app = express()
 let db
 
-let connectionString = "mongodb+srv://todoAdmin:12345@cluster0.ahahd.mongodb.net/todoApp?retryWrites=true&w=majority"
+// let connectionString = "mongodb+srv://todoAdmin:12345@cluster0.ahahd.mongodb.net/todoApp?retryWrites=true&w=majority"
+let connectionString = "mongodb://localhost:27017/simpleTodo"
+ 
+
 mongodb.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: true}, function(err, client){
     db = client.db()  
     app.listen(3000)
@@ -13,6 +16,8 @@ mongodb.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: tr
 app.use(express.urlencoded({extended: false}))
 
 app.get("/", function(req, res){
+  db.collection("items").find().toArray(function(err,items){
+    // console.log(items)
     res.send(`<!DOCTYPE html>
     <html>
     <head>
@@ -35,41 +40,31 @@ app.get("/", function(req, res){
         </div>
         
         <ul class="list-group pb-5">
-          <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
-            <span class="item-text">Fake example item #1</span>
-            <div>
-              <button class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
-              <button class="delete-me btn btn-danger btn-sm">Delete</button>
-            </div>
-          </li>
-          <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
-            <span class="item-text">Fake example item #2</span>
-            <div>
-              <button class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
-              <button class="delete-me btn btn-danger btn-sm">Delete</button>
-            </div>
-          </li>
-          <li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
-            <span class="item-text">Fake example item #3</span>
-            <div>
-              <button class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
-              <button class="delete-me btn btn-danger btn-sm">Delete</button>
-            </div>
-          </li>
+        ${items.map(function(element){
+          return `<li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
+          <span class="item-text">${element.todoInputItem}</span>
+          <div>
+            <button class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
+            <button class="delete-me btn btn-danger btn-sm">Delete</button>
+          </div>
+        </li>`
+        }).join("")}
         </ul>
         
       </div>
       
     </body>
     </html>`)
+  })
 })
 
 app.post("/create-item", function(req,res){
     db.collection('items').insertOne({todoInputItem: req.body.todoItem}, function(){
-        res.send("Thank you for submitting the form")
+        // res.send("Thank you for submitting the form")
+        res.redirect('/')
     })
 
-    console.log(req.body.todoItem)
+    // console.log(req.body.todoItem)
 })
 
 
