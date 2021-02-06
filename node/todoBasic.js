@@ -1,8 +1,8 @@
 let taskInput = document.getElementById("taskInput")
-let todoBtn = document.getElementById("defaultForm")
+let todoForm = document.getElementById("defaultForm")
 let displayList = document.getElementById("displayList")
 
-todoBtn.addEventListener("submit", handelEvent) 
+todoForm.addEventListener("submit", handelEvent) 
 // function(event){ 
 //     event.preventDefault()
 //     createList()
