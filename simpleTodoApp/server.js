@@ -13,7 +13,9 @@ mongodb.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: tr
     app.listen(3000)
 })
 
+app.use(express.static("public"))
 app.use(express.urlencoded({extended: false}))
+app.use(express.json())
 
 app.get("/", function(req, res){
   db.collection("todoCol").find().toArray(function(err,arr){
@@ -52,7 +54,8 @@ app.get("/", function(req, res){
         </ul>
         
       </div>
-      
+      <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+      <script src="/browser.js"></script>
     </body>
     </html>`)
   })
@@ -65,6 +68,11 @@ app.post("/create-item", function(req,res){
     })
 
     // console.log(req.body.todoItem)
+})
+
+app.post("/update-item", function(req, res){
+  console.log(req.body.updatedText)
+  res.send("Updated Successfully")
 })
 
 
