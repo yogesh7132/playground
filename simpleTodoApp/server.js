@@ -16,7 +16,7 @@ mongodb.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: tr
 app.use(express.urlencoded({extended: false}))
 
 app.get("/", function(req, res){
-  db.collection("items").find().toArray(function(err,items){
+  db.collection("todoCol").find().toArray(function(err,arr){
     // console.log(items)
     res.send(`<!DOCTYPE html>
     <html>
@@ -40,9 +40,9 @@ app.get("/", function(req, res){
         </div>
         
         <ul class="list-group pb-5">
-        ${items.map(function(element){
+        ${arr.map(function(arrVal){
           return `<li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
-          <span class="item-text">${element.todoInputItem}</span>
+          <span class="item-text">${arrVal.item}</span>
           <div>
             <button class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
             <button class="delete-me btn btn-danger btn-sm">Delete</button>
@@ -59,7 +59,7 @@ app.get("/", function(req, res){
 })
 
 app.post("/create-item", function(req,res){
-    db.collection('items').insertOne({todoInputItem: req.body.todoItem}, function(){
+    db.collection('todoCol').insertOne({"item": req.body.todoItem}, function(){
         // res.send("Thank you for submitting the form")
         res.redirect('/')
     })
