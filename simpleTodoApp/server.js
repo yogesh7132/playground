@@ -46,7 +46,7 @@ app.get("/", function(req, res){
           return `<li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
           <span class="item-text">${arrVal.item}</span>
           <div>
-            <button class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
+            <button data-id="${arrVal._id}" class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
             <button class="delete-me btn btn-danger btn-sm">Delete</button>
           </div>
         </li>`
@@ -71,8 +71,10 @@ app.post("/create-item", function(req,res){
 })
 
 app.post("/update-item", function(req, res){
-  console.log(req.body.updatedText)
-  res.send("Updated Successfully")
+  db.collection('todoCol').findOneAndUpdate({_id: new mongodb.ObjectID(req.body.itemId)},{$set:{item:req.body.updatedText}},function(){
+    // res.redirect('/')
+    res.send("Success")
+  })
 })
 
 
