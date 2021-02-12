@@ -18,7 +18,7 @@ app.use(express.urlencoded({extended: false}))
 app.use(express.json())
 
 app.get("/", function(req, res){
-  db.collection("todoCol").find().toArray(function(err,arr){
+  db.collection("todoCol").find().toArray(function(err,itemArr){
     // console.log(items)
     res.send(`<!DOCTYPE html>
     <html>
@@ -42,18 +42,14 @@ app.get("/", function(req, res){
         </div>
         
         <ul id="todo-list" class="list-group pb-5">
-        ${arr.map(function(arrVal){
-          return `<li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
-          <span class="item-text">${arrVal.item}</span>
-          <div>
-            <button data-id="${arrVal._id}" class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
-            <button data-id="${arrVal._id}" class="delete-me btn btn-danger btn-sm">Delete</button>
-          </div>
-        </li>`
-        }).join("")}
+        
         </ul>
         
       </div>
+        <script>
+        let items = ${JSON.stringify(itemArr)}
+        </script>
+
       <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
       <script src="/browser.js"></script>
     </body>

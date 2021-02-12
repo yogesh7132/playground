@@ -8,6 +8,12 @@ function itemTemplate(todoValue){
    </li>`
 }
 
+// Initial page load render
+let ourHTML = items.map(function(arr){
+    return itemTemplate(arr)
+}).join(" ")
+document.getElementById("todo-list").insertAdjacentHTML("beforeend", ourHTML)
+
 // Create feature
 let todoInput = document.getElementById("todo-input")
 
