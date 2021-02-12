@@ -47,7 +47,7 @@ app.get("/", function(req, res){
           <span class="item-text">${arrVal.item}</span>
           <div>
             <button data-id="${arrVal._id}" class="edit-me btn btn-secondary btn-sm mr-1">Edit</button>
-            <button class="delete-me btn btn-danger btn-sm">Delete</button>
+            <button data-id="${arrVal._id}" class="delete-me btn btn-danger btn-sm">Delete</button>
           </div>
         </li>`
         }).join("")}
@@ -71,9 +71,16 @@ app.post("/create-item", function(req,res){
 })
 
 app.post("/update-item", function(req, res){
-  db.collection('todoCol').findOneAndUpdate({_id: new mongodb.ObjectID(req.body.itemId)},{$set:{item:req.body.updatedText}},function(){
+  db.collection('todoCol').findOneAndUpdate({_id: new mongodb.ObjectID(req.body.updateItemId)},{$set:{item:req.body.updatedText}},function(){
     // res.redirect('/')
     res.send("Success")
+  })
+})
+
+app.post("/delete-item", function(req, res){
+  db.collection("todoCol").deleteOne({_id: new mongodb.ObjectID(req.body.deleteItemId)},function(){
+    res.send("Successfully Deleted")
+    // res.redirect('/')
   })
 })
 
