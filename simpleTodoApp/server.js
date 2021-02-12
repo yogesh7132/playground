@@ -33,15 +33,15 @@ app.get("/", function(req, res){
         <h1 class="display-4 text-center py-1">To-Do App</h1>
         
         <div class="jumbotron p-3 shadow-sm">
-          <form action="/create-item" method="POST">
+          <form id="todo-form" action="/create-item" method="POST">
             <div class="d-flex align-items-center">
-              <input name="todoItem" autofocus autocomplete="off" class="form-control mr-3" type="text" style="flex: 1;">
+              <input id="todo-input" name="todoItem" autofocus autocomplete="off" class="form-control mr-3" type="text" style="flex: 1;">
               <button class="btn btn-primary">Add New Item</button>
             </div>
           </form>
         </div>
         
-        <ul class="list-group pb-5">
+        <ul id="todo-list" class="list-group pb-5">
         ${arr.map(function(arrVal){
           return `<li class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">
           <span class="item-text">${arrVal.item}</span>
@@ -62,9 +62,10 @@ app.get("/", function(req, res){
 })
 
 app.post("/create-item", function(req,res){
-    db.collection('todoCol').insertOne({"item": req.body.todoItem}, function(){
+    db.collection('todoCol').insertOne({item: req.body.input}, function(err,info){
         // res.send("Thank you for submitting the form")
-        res.redirect('/')
+        // res.redirect('/')
+        res.json(info.ops[0])
     })
 
     // console.log(req.body.todoItem)
