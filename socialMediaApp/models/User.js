@@ -1,3 +1,5 @@
+const userCollection = require("../db").collection('users')
+
 let validator = require("validator")
 
 let User = function(incomingData){
@@ -27,8 +29,11 @@ User.prototype.catchUp= function(){
 }
 
 User.prototype.register = function(){
+    // Clean & Validate the data
     this.catchUp()
     this.validate()
+    // Save data to Database
+    userCollection.insertOne(this.data)
 }
 
 module.exports = User
