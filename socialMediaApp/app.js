@@ -6,7 +6,7 @@ app.set('views','views')
 app.set('view engine', 'ejs')
 
 app.get('/',function(req,res){
-    red.render('html-guest')
+    res.render('html-guest')
 })
 
 app.listen(3000)
