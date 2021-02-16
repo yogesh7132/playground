@@ -4,6 +4,13 @@ exports.home = function(req,res){
     res.render('home-guest')
 }
 
+exports.login = function(req,res){
+    let user = new User(req.body)
+    user.login(function(status){
+        res.send(status)
+    })
+}
+
 exports.register = function(req,res){
     // console.log(req.body)
     let user = new User(req.body)

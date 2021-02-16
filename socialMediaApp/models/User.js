@@ -28,6 +28,16 @@ User.prototype.catchUp= function(){
     }
 }
 
+User.prototype.login = function(callbackResult){
+    userCollection.findOne({username: this.data.username}, (err, userDetail)=>{
+        if(userDetail && userDetail.password == this.data.password ){
+            callbackResult("Congrats")
+        }else{
+            callbackResult("Invalid Username/Password")
+        }
+    })
+}
+
 User.prototype.register = function(){
     // Clean & Validate the data
     this.catchUp()
