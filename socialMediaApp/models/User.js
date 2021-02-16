@@ -31,12 +31,14 @@ User.prototype.cleanUp= function(){
 User.prototype.login = function(){
     return new Promise((resolve, reject)=>{
         this.cleanUp()
-        userCollection.findOne({username: this.data.username}, (err, userDetail)=>{
+        userCollection.findOne({username: this.data.username}).then((userDetail)=>{
             if(userDetail && userDetail.password == this.data.password ){
                 resolve("Congrats")
             }else{
                 reject("Invalid Username/Password")
             }
+        }).catch(function(){
+            reject("Something went wrong")
         })
     })
     
