@@ -6,8 +6,10 @@ exports.home = function(req,res){
 
 exports.login = function(req,res){
     let user = new User(req.body)
-    user.login(function(status){
+    user.login().then(function(status){
         res.send(status)
+    }).catch(function(err){
+        res.send(err)
     })
 }
 
