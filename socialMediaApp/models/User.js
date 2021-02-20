@@ -39,7 +39,7 @@ User.prototype.login = function(){
                 reject("Invalid Username/Password")
             }
         }).catch(function(){
-            reject("Something went wrong")
+            reject("Something went wrong with mongodb findOne method")
         })
     })
     
