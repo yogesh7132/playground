@@ -1,4 +1,5 @@
 const userCollection = require("../db").collection('users')
+const bcrypt = require('bcrypt')
 
 let validator = require("validator")
 
@@ -12,7 +13,7 @@ User.prototype.validate = function(){
     if(this.data.username != "" && validator.isAlphanumeric(this.data.username)) {"Username can only be Letters and Numbers"}
     if(!validator.isEmail(this.data.email)) {this.error.push("Enter valid email")}
     if(this.data.password == "") {this.error.push("Enter valid password")}
-    if(this.data.password.length < 6) {this.error.push("password length should be of minimum 6 characters")}
+    if(this.data.password.length < 1) {this.error.push("password length should be of minimum 6 characters")}
 }
 
 User.prototype.cleanUp= function(){
@@ -32,7 +33,7 @@ User.prototype.login = function(){
     return new Promise((resolve, reject)=>{
         this.cleanUp()
         userCollection.findOne({username: this.data.username}).then((userDetail)=>{
-            if(userDetail && userDetail.password == this.data.password ){
+            if(userDetail && bcrypt.compareSync(this.data.password, userDetail.password)){
                 resolve("Congrats")
             }else{
                 reject("Invalid Username/Password")
@@ -49,7 +50,12 @@ User.prototype.register = function(){
     this.cleanUp()
     this.validate()
     // Save data to Database
-    userCollection.insertOne(this.data)
+    if(!this.error.length){
+        let salt = bcrypt.genSaltSync(10)
+        this.data.password = bcrypt.hashSync(this.data.password, salt)
+        userCollection.insertOne(this.data)
+    }
+    
 }
 
 module.exports = User
