@@ -9,11 +9,26 @@ let User = function(incomingData){
 }
 
 User.prototype.validate = function(){
-    if(this.data.username == "") {this.error.push("Enter valid username")}
-    if(this.data.username != "" && validator.isAlphanumeric(this.data.username)) {"Username can only be Letters and Numbers"}
-    if(!validator.isEmail(this.data.email)) {this.error.push("Enter valid email")}
-    if(this.data.password == "") {this.error.push("Enter valid password")}
-    if(this.data.password.length < 1) {this.error.push("password length should be of minimum 6 characters")}
+    return new Promise(async (resolve, reject)=> {
+        if(this.data.username == "") {this.error.push("Enter valid username")}
+        if(this.data.username != "" && validator.isAlphanumeric(this.data.username)) {"Username can only be Letters and Numbers"}
+        if(!validator.isEmail(this.data.email)) {this.error.push("Enter valid email")}
+        if(this.data.password == "") {this.error.push("Enter valid password")}
+        if(this.data.password != "" && this.data.password.length < 1) {this.error.push("password length should be of minimum 6 characters")}
+        
+        // Only is username is valid, check to see if alrady exists
+        if (this.data.username.length > 2 && this.data.username.length <10 && validator.isAlphanumeric(this.data.username)){
+            let usernameExists = await userCollection.find({username: this.data.username})
+            if(usernameExists){ this.error.push("This username aleardy exists")}
+        }
+        
+        // Only is email is valid, check to see if alrady exists
+        if (validator.isEmail(this.data.email)){
+            let emailExists = await userCollection.find({username: this.data.email})
+            if(emailExists){ this.error.push("This email aleardy exists")}
+        }
+        resolve()
+    })
 }
 
 User.prototype.cleanUp= function(){
@@ -46,16 +61,23 @@ User.prototype.login = function(){
 }
 
 User.prototype.register = function(){
-    // Clean & Validate the data
-    this.cleanUp()
-    this.validate()
-    // Save data to Database
-    if(!this.error.length){
-        let salt = bcrypt.genSaltSync(10)
-        this.data.password = bcrypt.hashSync(this.data.password, salt)
-        userCollection.insertOne(this.data)
-    }
+    return new Promise(async (resolve, reject) => {
+        // Clean & Validate the data
+        this.cleanUp()
+        await this.validate()
     
+        // Save data to Database
+        if(!this.error.length){
+            // hash user password
+            let salt = bcrypt.genSaltSync(10)
+            this.data.password = bcrypt.hashSync(this.data.password, salt)
+            await userCollection.insertOne(this.data)
+            resolve()
+        }else{
+            reject(this.error)
+        }
+        
+    })
 }
 
 module.exports = User
