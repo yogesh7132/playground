@@ -1,0 +1,15 @@
+.special {
+  color: orange;
+}
+
+html {
+  width: 100%;
+  background-color: rgb(243, 243, 243);
+}
+
+body {
+  width: 900px;
+  margin: 10px auto;
+  background-color: #ffffff;
+  padding: 10px;
+}
