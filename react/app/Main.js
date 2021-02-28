@@ -2,6 +2,7 @@ import React from "react"
 import ReactDOM from "react-dom"
 
 const useState = React.useState
+const useEffect = React.useEffect
 
 // Header ---------------------------------------------
 function Header() {
@@ -12,9 +13,13 @@ function Header() {
 function TimeArea() {
   const [theTime, setTime] = useState(new Date().toLocaleString())
 
-  setTimeout(function () {
-    setTime(new Date().toLocaleString())
-  }, 1000)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(new Date().toLocaleString())
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [])
+
   return (
     <p>
       The current time is{" "}
@@ -109,12 +114,20 @@ function Footer() {
 
 // OurApp ---------------------------------------------
 function OurApp() {
-  const [pets, setPets] = useState([
-    { name: "Meowsalot", species: "cat", age: "2", id: 1234 },
-    { name: "Barksalot", species: "dog", age: "3", id: 2234 },
-    { name: "Purrsalot", species: "cat", age: "5", id: 3234 },
-    { name: "Fluffsalot", species: "rabbit", age: "4", id: 4234 }
-  ])
+  const [pets, setPets] = useState([])
+
+  // Run for the first time component renders
+  useEffect(() => {
+    if (localStorage.getItem("petData")) {
+      setPets(JSON.parse(localStorage.getItem("petData")))
+    }
+  }, [])
+
+  // Run each time component renders
+  useEffect(() => {
+    localStorage.setItem("petData", JSON.stringify(pets))
+  }, [pets])
+
   return (
     <>
       <Header />
