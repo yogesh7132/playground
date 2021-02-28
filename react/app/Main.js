@@ -89,11 +89,14 @@ function AddPetsForm(props) {
 
 // DisplayPets ---------------------------------------------
 function DisplayPets(props) {
+  function deleteHandler() {
+    props.setPets(prev => prev.filter(pet => pet.id != props.id))
+  }
   return (
     <>
       <li>
         {props.name} is a {props.species} is {props.age} years old.
-        <button>Delete</button>
+        <button onClick={deleteHandler}>Delete</button>
       </li>
     </>
   )
@@ -123,7 +126,7 @@ function OurApp() {
       <h2>Pet Details:</h2>
       <ul>
         {pets.map(pet => {
-          return <DisplayPets name={pet.name} species={pet.species} age={pet.age} />
+          return <DisplayPets setPets={setPets} id={pet.id} name={pet.name} species={pet.species} age={pet.age} />
         })}
       </ul>
       <hr />
