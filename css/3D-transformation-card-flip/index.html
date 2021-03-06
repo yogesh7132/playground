@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Transformation - Card Flip</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <section class="container">
+      <nav>
+        <div class="navbar">
+          <a href="#">Home</a>
+          <ul>
+            <li><a href="#">Link</a></li>
+            <li><a href="#">Link</a></li>
+            <li><a href="#">Link</a></li>
+            <li><a href="#">Link</a></li>
+            <li><a href="#">Link</a></li>
+          </ul>
+          <a href="#">SignUp</a>
+        </div>
+      </nav>
+      <div class="main">
+        <div class="card">
+          <div class="card1" style="padding-top: 100px">
+            Card - Frontside <br /><br />
+            ----Click Me-----
+          </div>
+          <div class="card2" style="padding-top: 100px">
+            Card - Backside <br /><br />
+            ----Click Me (Again)-----<br />
+          </div>
+        </div>
+      </div>
+    </section>
+    <script>
+      var card = document.querySelector(".card")
+      card.addEventListener("click", function () {
+        card.classList.toggle("is-flipped")
+      })
+    </script>
+  </body>
+</html>

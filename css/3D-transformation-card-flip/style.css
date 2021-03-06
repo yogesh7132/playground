@@ -1,0 +1,97 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;600;700;800;900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  background: linear-gradient(to right, #aa4b6b, #6b6b83, #3b8d99);
+  /* background-color: #85ffbd; */
+  /* background-image: linear-gradient(45deg, #85ffbd 0%, #fffb7d 100%); */
+  height: 100vh;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  text-align: center;
+}
+
+/* ----------------Flex Navbar-------------------- */
+nav {
+  width: 100%;
+  background-color: rgb(41, 39, 39);
+  position: absolute;
+  top: 0px;
+}
+
+.navbar {
+  width: 1200px;
+  margin: 0 auto;
+  /* background-color: tomato; */
+  display: flex;
+  justify-content: space-between;
+}
+
+.navbar ul {
+  display: flex;
+  justify-content: space-evenly;
+  width: 80%;
+  /* backgroun d-color: turquoise; */
+}
+
+.navbar li {
+  list-style: none;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: white;
+  padding: 0 20px;
+  line-height: 2rem;
+}
+
+.navbar a:hover {
+  color: #aa4b6b;
+}
+
+/* -------------3D Tranformation---------------- */
+.main {
+  border: 1px solid black;
+  width: 50vh;
+  height: 50vh;
+  perspective: 600px;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 1s;
+}
+
+.card div {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  backface-visibility: hidden;
+}
+
+.card div:nth-of-type(1) {
+  color: white;
+  background-color: tomato;
+}
+
+.card div:nth-of-type(2) {
+  background-color: teal;
+  color: violet;
+  transform: rotateY(180deg);
+}
+
+.card.is-flipped {
+  transform: rotateY(180deg);
+}
