@@ -1,11 +1,16 @@
-const express = require('express')
+const express = require("express")
 const router = express()
 
-const userController = require('./controllers/userController')
+const userController = require("./controllers/userController")
+const postController = require("./controllers/postController")
 
-router.get('/', userController.home)
-router.post('/register', userController.register)
-router.post('/login', userController.login)
-router.post('/logout', userController.logout)
+//User Controller Routes
+router.get("/", userController.home)
+router.post("/register", userController.register)
+router.post("/login", userController.login)
+router.post("/logout", userController.logout)
+
+//Post Controller Routes
+router.get("/create-post", userController.mustBeLoggedIn, postController.viewCreateScreen)
 
 module.exports = router
