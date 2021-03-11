@@ -25,6 +25,7 @@ exports.login = function (req, res) {
     .login()
     .then(function (status) {
       req.session.user = { avatar: user.avatar, username: user.data.username, _id: user.data._id }
+      // console.log(user.data._id)
       req.session.save(function () {
         res.redirect("/")
       })

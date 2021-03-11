@@ -30,7 +30,7 @@ User.prototype.validate = function () {
     // Only is username is valid, check to see if alrady exists
     if (this.data.username.length > 2 && this.data.username.length < 10 && validator.isAlphanumeric(this.data.username)) {
       let usernameExists = await userCollection.findOne({ username: this.data.username })
-      console.log(usernameExists)
+      // console.log(usernameExists)
       if (usernameExists) {
         this.error.push("This username aleardy exists")
       }
