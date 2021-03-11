@@ -4,9 +4,11 @@ const md5 = require("md5")
 
 let validator = require("validator")
 
-let User = function (incomingData) {
+let User = function (incomingData, getAvatar) {
   this.data = incomingData
   this.error = []
+  if(getAvatar == undefined){getAvatar:false}
+  if(getAvatar){this.getAvatar()}
 }
 
 User.prototype.validate = function () {
