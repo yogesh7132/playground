@@ -16,7 +16,7 @@ exports.home = function (req, res) {
   if (req.session.user) {
     res.render("home-dashboard")
   } else {
-    res.render("home-guest", { errors: req.flash("errors"), regErrors: req.flash("regErrors") })
+    res.render("home-guest", {regErrors: req.flash("regErrors") })
   }
 }
 
@@ -81,7 +81,7 @@ exports.profilePostScreen = function(req,res){
 exports.profilePostScreen = function(req,res){
   //ask our post model for posts by a certain author id
   Post.findPostByAuthorId(req.profileUser._id).then(function(posts){
-    console.log(posts)
+    // console.log(posts)
     res.render("profile",{
       posts:posts, 
       profileUsername: req.profileUser.username, 

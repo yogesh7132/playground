@@ -25,6 +25,16 @@ app.set("views", "views")
 app.set("view engine", "ejs")
 
 app.use(function(req,res,next){
+  //male all error and success flash message vailable from all template
+  res.locals.errors = req.flash("errors")
+  res.locals.success = req.flash("success")
+  //make current user available on the req object
+  if(req.session.user){
+    req.visitorId = req.session.user._id
+  }else{
+    req.visitorId = 0
+  }
+  //make user session data available from within templates
   res.locals.user = req.session.user
   next()
 })
