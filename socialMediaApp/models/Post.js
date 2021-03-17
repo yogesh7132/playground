@@ -32,11 +32,11 @@ Post.prototype.create = function(){
         this.validate()
         //save post into database
         if(!this.errors.length){
-            postCollection.insertOne(this.data).then( ()=>{
-                resolve()
+            postCollection.insertOne(this.data).then( (info)=>{
+                resolve(info.ops[0]._id)
             }).catch(()=>{
-                console.log("Mongodb Error in insertOne")
-                reject()
+                this.errors.push("Please try again later : by MONGODB")
+                reject(this.errors)
             })
         }else{
             reject(this.errors)
