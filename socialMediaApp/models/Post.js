@@ -1,6 +1,7 @@
 const ObjectID = require("mongodb").ObjectID
 const postCollection = require("../db").db().collection("posts")
 const User = require("./User")
+const sanitizeHTML =  require('sanitize-html')
 
 let Post = function(data, userid, requestedPostId){
     this.data = data
@@ -15,7 +16,8 @@ Post.prototype.cleanUp = function(){
     // get rid of bogud properties
     this.data = {
         title: this.data.title.trim(),
-        body: this.data.body.trim(),
+        // body: this.data.body.trim(),
+        body: sanitizeHTML(this.data.body.trim(),{allowedTags: [], allowedAttributes: []}),
         createdDate: new Date(),
         author: ObjectID(this.userid)
     }
