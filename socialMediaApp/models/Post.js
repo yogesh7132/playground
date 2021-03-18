@@ -75,7 +75,6 @@ Post.findSinglePostById = function(id, visitorId){
         let posts = await Post.reuseablePostQuery([
             {$match: {_id: new ObjectID(id)}}
         ], visitorId)
-        
         if(posts.length){
             // console.log(posts[0])
             resolve(posts[0])
@@ -122,6 +121,25 @@ Post.prototype.actuallyUpdate = function(){
             resolve("success")
         }else{
             reject("failure")
+        }
+    })
+}
+
+Post.delete = function(postIdToDelete, currentUserId) {
+    return new Promise(async (resolve, reject)=>{
+        try{
+            let post = await Post.findSinglePostById(postIdToDelete, currentUserId)
+            if(post.isVisitorOwner){
+                await postCollection.deleteOne({_id: new ObjectID(postIdToDelete)})
+                resolve()
+            }else{
+                //When someone is trying to delete the post they don't own
+                reject()
+            }
+        }catch{
+            // when post is not valid or Post does not exists
+            console.log("inside catch")   //console
+            reject()
         }
     })
 }
