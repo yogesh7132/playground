@@ -27,22 +27,60 @@ export default class Search{
     // 3. Methods
     keyPressHandler(){
       let value = this.inputFeild.value
+      if(value == ""){
+        clearInterval(this.timingWaitTimer)
+        this.hideLoaderIcon()
+        this.hideResultArea()
+      }
+
       if(value != "" && value != this.previousValue){
         clearInterval(this.timingWaitTimer)
         this.showLoaderIcon()
-        this.timingWaitTimer = setTimeout(()=> this.sendRequest(),3000)
+        this.hideResultArea()
+        this.timingWaitTimer = setTimeout(()=> this.sendRequest(),750)
       }
       this.previousValue = value
     }
+
     showLoaderIcon(){
-      this.loaderItem.classList.add("circle-loader--visible")
+    this.loaderItem.classList.add("circle-loader--visible")
+    }
+    hideLoaderIcon(){
+    this.loaderItem.classList.remove("circle-loader--visible")
+    }
+    showResultArea(){
+      this.resultArea.classList.add("live-search-results--visible")
+    }
+    hideResultArea(){
+      this.resultArea.classList.remove("live-search-results--visible")
     }
     sendRequest(){
       axios.post("/search",{searchTerm: this.inputFeild.value}).then((response)=>{
-        console.log(response)
+        // console.log(response.data)  
+        this.renderPostHTML(response.data)
       }).catch(()=>{
         alert("Hello, the request failed")
       })
+    }
+    renderPostHTML(posts){
+      if(posts.length){
+        this.resultArea.innerHTML=`<div class="list-group shadow-sm">
+        <div class="list-group-item active"><strong>Search Results</strong> (${posts.length > 1?`${posts.length} items found`: "1 item found"})</div>
+        ${posts.map( post =>{
+          let postDate = new Date(post.createdDate)
+          return `<a href="/post/${post._id}" class="list-group-item list-group-item-action">
+          <img class="avatar-tiny" src="${post.author.avatar}"> <strong>${post.title}</strong>
+          <span class="text-muted small">by ${post.author.username} on ${postDate.getDate()}/${postDate.getMonth()+1}/${postDate.getFullYear()} </span>
+        </a>`
+        })}
+        
+        </div>
+    </div>`
+      }else{
+        this.resultArea.innerHTML=`<p class="alert alert-danger text-center shadow-sn"> Sorry, we could find any results for the search</p>`
+      }
+      this.hideLoaderIcon()
+      this.showResultArea()
     }
     openOverlay(){
         this.overlay.classList.add("search-overlay--visible")
@@ -65,27 +103,7 @@ export default class Search{
           <div class="container container--narrow py-3">
             <div class="circle-loader"></div>
             <div class="live-search-results">
-              <div class="list-group shadow-sm">
-                <div class="list-group-item active"><strong>Search Results</strong> (4 items found)</div>
-    
-                <a href="#" class="list-group-item list-group-item-action">
-                  <img class="avatar-tiny" src="https://gravatar.com/avatar/b9216295c1e3931655bae6574ac0e4c2?s=128"> <strong>Example Post #1</strong>
-                  <span class="text-muted small">by barksalot on 0/14/2019</span>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action">
-                  <img class="avatar-tiny" src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128"> <strong>Example Post #2</strong>
-                  <span class="text-muted small">by brad on 0/12/2019</span>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action">
-                  <img class="avatar-tiny" src="https://gravatar.com/avatar/b9216295c1e3931655bae6574ac0e4c2?s=128"> <strong>Example Post #3</strong>
-                  <span class="text-muted small">by barksalot on 0/14/2019</span>
-                </a>
-                <a href="#" class="list-group-item list-group-item-action">
-                  <img class="avatar-tiny" src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128"> <strong>Example Post #4</strong>
-                  <span class="text-muted small">by brad on 0/12/2019</span>
-                </a>
-              </div>
-            </div>
+              
           </div>
         </div>
       </div>`)
