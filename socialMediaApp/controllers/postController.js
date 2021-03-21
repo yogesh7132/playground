@@ -26,8 +26,10 @@ exports.viewSinglePost = async function(req,res){
 
 exports.viewEditScreen = async function(req,res){
     try{
-        let post = await Post.findSinglePostById(req.params.id)
-        if(post.authorId == req.visitorId){
+        // let post = await Post.findSinglePostById(req.params.id)
+        let post = await Post.findSinglePostById(req.params.id, req.visitorId)
+        // if(post.authorId == req.visitorId){
+        if(post.isVisitorOwner){
             res.render("edit-post", {post: post})
         }else{
             req.flash("errors", "You don't have permission to perform that action")
