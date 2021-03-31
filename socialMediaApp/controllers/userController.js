@@ -2,11 +2,11 @@ const User = require("../models/User")
 const Post = require("../models/Post")
 const Follow = require("../models/Follow")
 
-exports.sharedProfileData = async function(req, res, next){
+exports.sharedProfileData = async function (req, res, next) {
   let isVisitorProfile = false
   let isFollowing = false
 
-  if(req.session.user){
+  if (req.session.user) {
     isVisitorProfile = req.profileUser._id.equals(req.session.user._id)
     isFollowing = await Follow.isVisitorFollowing(req.profileUser._id, req.visitorId)
   }
@@ -17,18 +17,18 @@ exports.sharedProfileData = async function(req, res, next){
   let postCountPromise = Post.countPostByAuthorId(req.profileUser._id)
   let followersCountPromise = Follow.countFollowersById(req.profileUser._id)
   let followingCountPromise = Follow.countFollowingById(req.profileUser._id)
-  let [postCount, followersCount, followingCount] = await Promise.all([postCountPromise,followersCountPromise,followingCountPromise])
+  let [postCount, followersCount, followingCount] = await Promise.all([postCountPromise, followersCountPromise, followingCountPromise])
   req.postCount = postCount
-  req.followersCount  =  followersCount
+  req.followersCount = followersCount
   req.followingCount = followingCount
-  
+
   next()
 }
 
-exports.mustBeLoggedIn =  function(req,res,next){
-  if(req.session.user){
+exports.mustBeLoggedIn = function (req, res, next) {
+  if (req.session.user) {
     next()
-  }else{
+  } else {
     req.flash("errors", "You must be logged in to perform this action")
     req.session.save(function () {
       res.redirect("/")
@@ -40,9 +40,9 @@ exports.home = async function (req, res) {
   if (req.session.user) {
     // fetch feed of posts for current user
     let posts = await Post.getFeed(req.session.user._id)
-    res.render("home-dashboard", {posts: posts})
+    res.render("home-dashboard", { posts: posts })
   } else {
-    res.render("home-guest", {regErrors: req.flash("regErrors") })
+    res.render("home-guest", { regErrors: req.flash("regErrors") })
   }
 }
 
@@ -91,48 +91,53 @@ exports.register = function (req, res) {
     })
 }
 
-exports.ifUserExists = function(req, res, next){
-  User.findByUsername(req.params.username).then(function(userDocument){
-    req.profileUser = userDocument      // creating a new property in request object
-    next()
-  }).catch(function(){
-    res.render("404")
-  })
+exports.ifUserExists = function (req, res, next) {
+  User.findByUsername(req.params.username)
+    .then(function (userDocument) {
+      req.profileUser = userDocument // creating a new property in request object
+      next()
+    })
+    .catch(function () {
+      res.render("404")
+    })
 }
 
 // exports.profilePostScreen = function(req,res){
 //   res.render("profile",{profileUsername: req.profileUser.username, profileAvatar: req.profileUser.avatar})
 // }
 
-exports.profilePostScreen = function(req,res){
+exports.profilePostScreen = function (req, res) {
   //ask our post model for posts by a certain author id
-  Post.findPostByAuthorId(req.profileUser._id).then(function(posts){
-    // console.log(posts)
-    res.render("profile",{
-      currentPage: "posts",
-      posts:posts, 
-      profileUsername: req.profileUser.username, 
-      profileAvatar: req.profileUser.avatar,
-      isFollowing: req.isFollowing,
-      isVisitorProfile: req.isVisitorProfile,
-      counts: {
-        postCount: req.postCount,
-        followersCount: req.followersCount,
-        followingCount: req.followingCount
-      }
+  Post.findPostByAuthorId(req.profileUser._id)
+    .then(function (posts) {
+      // console.log(posts)
+      res.render("profile", {
+        title: `Profile for ${req.profileUser.username}`,
+        currentPage: "posts",
+        posts: posts,
+        profileUsername: req.profileUser.username,
+        profileAvatar: req.profileUser.avatar,
+        isFollowing: req.isFollowing,
+        isVisitorProfile: req.isVisitorProfile,
+        counts: {
+          postCount: req.postCount,
+          followersCount: req.followersCount,
+          followingCount: req.followingCount
+        }
       })
-  }).catch(function(){
-    res.render("404")
-  })
+    })
+    .catch(function () {
+      res.render("404")
+    })
 }
 
-exports.profileFollowersScreen = async function(req,res){
-  try{
+exports.profileFollowersScreen = async function (req, res) {
+  try {
     let followers = await Follow.getFollowersById(req.profileUser._id)
-    res.render("profile-followers",{
+    res.render("profile-followers", {
       currentPage: "followers",
-      followers: followers, 
-      profileUsername: req.profileUser.username, 
+      followers: followers,
+      profileUsername: req.profileUser.username,
       profileAvatar: req.profileUser.avatar,
       isFollowing: req.isFollowing,
       isVisitorProfile: req.isVisitorProfile,
@@ -141,19 +146,19 @@ exports.profileFollowersScreen = async function(req,res){
         followersCount: req.followersCount,
         followingCount: req.followingCount
       }
-      })
-  }catch{
+    })
+  } catch {
     res.render("404")
   }
 }
 
-exports.profileFollowingScreen = async function(req,res){
-  try{
+exports.profileFollowingScreen = async function (req, res) {
+  try {
     let following = await Follow.getFollowingById(req.profileUser._id)
-    res.render("profile-following",{
+    res.render("profile-following", {
       currentPage: "following",
-      following: following, 
-      profileUsername: req.profileUser.username, 
+      following: following,
+      profileUsername: req.profileUser.username,
       profileAvatar: req.profileUser.avatar,
       isFollowing: req.isFollowing,
       isVisitorProfile: req.isVisitorProfile,
@@ -162,8 +167,8 @@ exports.profileFollowingScreen = async function(req,res){
         followersCount: req.followersCount,
         followingCount: req.followingCount
       }
-      })
-  }catch{
+    })
+  } catch {
     res.render("404")
   }
 }
