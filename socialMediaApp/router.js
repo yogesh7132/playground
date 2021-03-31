@@ -12,14 +12,14 @@ router.post("/login", userController.login)
 router.post("/logout", userController.logout)
 
 //profile related routes
-router.get("/profile/:username",userController.ifUserExists, userController.sharedProfileData, userController.profilePostScreen)
-router.get("/profile/:username/followers",userController.ifUserExists, userController.sharedProfileData, userController.profileFollowersScreen)
-router.get("/profile/:username/following",userController.ifUserExists, userController.sharedProfileData, userController.profileFollowingScreen)
+router.get("/profile/:username", userController.ifUserExists, userController.sharedProfileData, userController.profilePostScreen)
+router.get("/profile/:username/followers", userController.ifUserExists, userController.sharedProfileData, userController.profileFollowersScreen)
+router.get("/profile/:username/following", userController.ifUserExists, userController.sharedProfileData, userController.profileFollowingScreen)
 
 //Post Controller Routes
 router.get("/create-post", userController.mustBeLoggedIn, postController.viewCreateScreen)
 router.post("/create-post", userController.mustBeLoggedIn, postController.create)
-router.get("/post/:id",postController.viewSinglePost)
+router.get("/post/:id", postController.viewSinglePost)
 router.get("/post/:id/edit", userController.mustBeLoggedIn, postController.viewEditScreen)
 router.post("/post/:id/edit", userController.mustBeLoggedIn, postController.edit)
 router.post("/post/:id/delete", userController.mustBeLoggedIn, postController.delete)

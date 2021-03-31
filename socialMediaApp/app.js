@@ -2,8 +2,8 @@ const express = require("express")
 const session = require("express-session")
 const flash = require("connect-flash")
 const MongoStore = require("connect-mongo")(session)
-const markdown = require('marked')
-const sanitizeHTML =  require('sanitize-html')
+const markdown = require("marked")
+const sanitizeHTML = require("sanitize-html")
 
 const app = express()
 const router = require("./router")
@@ -26,19 +26,19 @@ app.use(express.static("public"))
 app.set("views", "views")
 app.set("view engine", "ejs")
 
-app.use(function(req,res,next){
+app.use(function (req, res, next) {
   //make our markdown function available from within ejs templates
-  res.locals.filterUserHTML = function(content){
+  res.locals.filterUserHTML = function (content) {
     // return markdown(content)
-    return sanitizeHTML(markdown(content), {allowedTags:['p','br','ul', 'ol', 'li', 'strong','bold','i','em','h1','h2', 'h3','h4','h5','h6'], allowedAttributes:[]})
+    return sanitizeHTML(markdown(content), { allowedTags: ["p", "br", "ul", "ol", "li", "strong", "bold", "i", "em", "h1", "h2", "h3", "h4", "h5", "h6"], allowedAttributes: [] })
   }
   //make all error and success flash message vailable from all template
   res.locals.errors = req.flash("errors")
   res.locals.success = req.flash("success")
   //make current user available on the req object
-  if(req.session.user){
+  if (req.session.user) {
     req.visitorId = req.session.user._id
-  }else{
+  } else {
     req.visitorId = 0
   }
   //make user session data available from within templates
@@ -48,4 +48,21 @@ app.use(function(req,res,next){
 
 app.use("/", router)
 
-module.exports = app
+const server = require("http").createServer(app)
+const io = require("socket.io")(server)
+
+io.use(function (socket, next) {
+  sessionOptions(socket.request, socket.request.res, next)
+})
+
+io.on("connection", function (socket) {
+  if (socket.request.session.user) {
+    let user = socket.request.session.user
+    socket.emit("welcome", { username: user.username, avatar: user.avatar })
+    socket.on("chatMessageFromBrowser", function (data) {
+      socket.broadcast.emit("chatMessageFromServer", { message: data.message, username: user.username, avatar: user.avatar })
+    })
+  }
+})
+
+module.exports = server
