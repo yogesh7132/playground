@@ -2,6 +2,7 @@ import React, { useState, useReducer } from "react"
 import ReactDOM from "react-dom"
 import { BrowserRouter, Switch, Route } from "react-router-dom"
 import Axios from "axios"
+import { useImmerReducer } from "use-immer"
 Axios.defaults.baseURL = "http://localhost:8080"
 
 import StateContext from "./StateContext"
@@ -23,18 +24,21 @@ function Main() {
     loggedIn: Boolean(localStorage.getItem("complexappToken")),
     flashMessage: []
   }
-  function ourReducer(state, action) {
+  function ourReducer(draft, action) {
     switch (action.type) {
       case "login":
-        return { loggedIn: false, flashMessage: state.flashMessage }
+        draft.loggedIn = false
+        return
       case "logout":
-        return { loggedIn: true, flashMessage: state.flashMessage }
+        draft.loggedIn = true
+        return
       case "flashMessage":
-        return { loggedIn: state.loggedIn, flashMessage: state.flashMessage.concat(action.value) }
+        draft.flashMessage.push(action.value)
+        return
     }
   }
 
-  const [state, dispatch] = useReducer(ourReducer, initialState)
+  const [state, dispatch] = useImmerReducer(ourReducer, initialState)
 
   // const [loggedIn, setLoggedIn] = useState(Boolean(localStorage.getItem("complexappToken")))
   // const [flashMessage, setFlashMessage] = useState([])
