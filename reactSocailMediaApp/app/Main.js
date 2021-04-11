@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from "react"
+import React, { useState, useEffect, useReducer } from "react"
 import ReactDOM from "react-dom"
 import { BrowserRouter, Switch, Route } from "react-router-dom"
 import Axios from "axios"
@@ -22,15 +22,21 @@ import FlashMessage from "./components/FlashMessage"
 function Main() {
   const initialState = {
     loggedIn: Boolean(localStorage.getItem("complexappToken")),
-    flashMessage: []
+    flashMessage: [],
+    user: {
+      token: localStorage.getItem("complexappToken"),
+      username: localStorage.getItem("complexappUsername"),
+      avatar: localStorage.getItem("complexappAvatar")
+    }
   }
   function ourReducer(draft, action) {
     switch (action.type) {
       case "login":
-        draft.loggedIn = false
+        draft.loggedIn = true
+        draft.user = action.userData
         return
       case "logout":
-        draft.loggedIn = true
+        draft.loggedIn = false
         return
       case "flashMessage":
         draft.flashMessage.push(action.value)
@@ -39,6 +45,17 @@ function Main() {
   }
 
   const [state, dispatch] = useImmerReducer(ourReducer, initialState)
+  useEffect(() => {
+    if (state.loggedIn) {
+      localStorage.setItem("complexappToken", state.user.token)
+      localStorage.setItem("complexappUsername", state.user.username)
+      localStorage.setItem("complexappAvatar", state.user.avatar)
+    } else {
+      localStorage.removeItem("complexappToken")
+      localStorage.removeItem("complexappUsername")
+      localStorage.removeItem("complexappAvatar")
+    }
+  }, [state.loggedIn])
 
   // const [loggedIn, setLoggedIn] = useState(Boolean(localStorage.getItem("complexappToken")))
   // const [flashMessage, setFlashMessage] = useState([])
