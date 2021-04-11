@@ -11,8 +11,8 @@ function CreatePost(props) {
     e.preventDefault()
     try {
       const response = await Axios.post("/create-post", { title, body, token: localStorage.getItem("complexappToken") })
-      console.log("Post saved successfully")
-      // Redirect to nerw post url
+      props.addFlashMessage("Post Created Successfully")
+      // Redirect to new post url
       props.history.push(`/post/${response.data}`)
     } catch (e) {
       console.log("Error: There is a problem while saving the post.")
