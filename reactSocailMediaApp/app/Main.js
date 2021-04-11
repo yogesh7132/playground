@@ -18,6 +18,7 @@ import Home from "./components/Home"
 import CreatePost from "./components/CreatePost"
 import ViewSinglePost from "./components/ViewSinglePost"
 import FlashMessage from "./components/FlashMessage"
+import Profile from "./components/Profile"
 
 function Main() {
   const initialState = {
@@ -77,6 +78,9 @@ function Main() {
             </Route>
             <Route path="/post/:id">
               <ViewSinglePost />
+            </Route>
+            <Route path="/profile/:username">
+              <Profile />
             </Route>
             <Route path="/about-us">
               <About />
