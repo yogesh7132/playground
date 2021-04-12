@@ -11,7 +11,7 @@ function ProfilePost() {
     try {
       async function fetchPost() {
         const response = await Axios.get(`/profile/${username}/posts`)
-        console.log(response.data)
+        // console.log(r0esponse.data)
         setPosts(response.data)
         setIsLoading(false)
       }
