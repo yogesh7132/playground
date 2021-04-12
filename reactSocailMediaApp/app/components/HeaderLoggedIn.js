@@ -6,7 +6,7 @@ import StateContext from "../StateContext"
 function HeaderLoggedIn(props) {
   const appDispatch = useContext(DispatchContext)
   const appState = useContext(StateContext)
-  console.log(appState.user.avatar)
+  // console.log(appState.user.avatar)
   function handelLogout() {
     appDispatch({ type: "logout" })
     // localStorage.removeItem("complexappToken")
