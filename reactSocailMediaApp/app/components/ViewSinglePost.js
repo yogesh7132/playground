@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react"
 import Page from "./Page"
 import Axios from "axios"
 import { useParams, Link } from "react-router-dom"
+import LoadingDotIcon from "./LoadingDotIcon"
+import ReactMarkdown from "react-markdown"
 
 function ViewSinglePost() {
   const { id } = useParams()
@@ -9,23 +11,29 @@ function ViewSinglePost() {
   const [post, setPost] = useState([])
 
   useEffect(() => {
-    try {
-      async function fetchPost() {
-        const response = await Axios.get(`/post/${id}`)
+    const ourRequest = Axios.CancelToken.source()
+    async function fetchPost() {
+      try {
+        const response = await Axios.get(`/post/${id}`, { cancelToken: ourRequest.token })
         // console.log(response.data)
         setPost(response.data)
         setIsLoading(false)
+      } catch (e) {
+        console.log("There is a problem")
       }
-      fetchPost()
-    } catch (e) {
-      console.log("There is a problem")
+    }
+    fetchPost()
+    return () => {
+      ourRequest.cancel()
     }
   }, [])
 
   if (isLoading) {
     return (
       <Page title="...">
-        <div>Loading ...</div>
+        <div>
+          <LoadingDotIcon />
+        </div>
       </Page>
     )
   }
@@ -53,7 +61,9 @@ function ViewSinglePost() {
         Posted by <Link to={`/profile/${post.author.username}`}>{post.author.username}</Link> on {formatedDate}
       </p>
 
-      <div className="body-content">{post.body}</div>
+      <div className="body-content">
+        <ReactMarkdown children={post.body} allowedTypes={["paragraph", "strong", "text", "emphasis", "heading", "list", "listItem"]} />
+      </div>
     </Page>
   )
 }
