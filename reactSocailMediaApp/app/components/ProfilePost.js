@@ -20,7 +20,7 @@ function ProfilePost() {
     } catch (e) {
       console.log("There is a problem")
     }
-  }, [])
+  }, [username])
 
   if (isLoading) {
     return (
