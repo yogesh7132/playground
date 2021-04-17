@@ -1,9 +1,11 @@
 import React, { useEffect, useContext } from "react"
 import Page from "./Page"
-import { useParams } from "react-router-dom"
+import { useParams, NavLink, Switch, Route } from "react-router-dom"
 import Axios from "axios"
 import StateContext from "../StateContext"
 import ProfilePost from "./ProfilePost"
+import ProfileFollowers from "./ProfileFollowers"
+import ProfileFollowing from "./ProfileFollowing"
 import { useImmer } from "use-immer"
 
 function Profile() {
@@ -31,7 +33,7 @@ function Profile() {
           draft.profileData = response.data
         })
       } catch (e) {
-        console.log("There was the problem")
+        console.log("There was the problem | profile")
       }
     }
     fetchProfileData()
@@ -45,18 +47,20 @@ function Profile() {
       })
     }
     const ourRequest = Axios.CancelToken.source()
-
+    console.log("---- 0")
     async function fetchProfileData() {
       try {
+        console.log("---- 1")
         const response = await Axios.post(`/addFollow/${state.profileData.profileUsername}`, { token: appState.user.token }, { cancelToken: ourRequest.token })
         // setProfileData(response.data)
+        console.log("---- 2")
         setState(draft => {
           draft.profileData.isFollowing = true
           draft.profileData.counts.followerCount++
           draft.followActionLoading = false
         })
       } catch (e) {
-        console.log("There was the problem")
+        console.log("There was the problem | addFollow", e)
       }
     }
     fetchProfileData()
@@ -83,7 +87,7 @@ function Profile() {
           draft.followActionLoading = false
         })
       } catch (e) {
-        console.log("There was the problem")
+        console.log("There was the problem | removeFollow")
       }
     }
     fetchProfileData()
@@ -121,18 +125,27 @@ function Profile() {
       </h2>
 
       <div className="profile-nav nav nav-tabs pt-2 mb-4">
-        <a href="#" className="active nav-item nav-link">
+        <NavLink exact to={`/profile/${state.profileData.profileUsername}`} className="nav-item nav-link">
           Posts: {state.profileData.counts.postCount}
-        </a>
-        <a href="#" className="nav-item nav-link">
+        </NavLink>
+        <NavLink to={`/profile/${state.profileData.profileUsername}/followers`} className="nav-item nav-link">
           Followers: {state.profileData.counts.followerCount}
-        </a>
-        <a href="#" className="nav-item nav-link">
+        </NavLink>
+        <NavLink to={`/profile/${state.profileData.profileUsername}/following`} className="nav-item nav-link">
           Following: {state.profileData.counts.followingCount}
-        </a>
+        </NavLink>
       </div>
-
-      <ProfilePost />
+      <Switch>
+        <Route exact path="/profile/:username">
+          <ProfilePost />
+        </Route>
+        <Route path="/profile/:username/followers">
+          <ProfileFollowers />
+        </Route>
+        <Route path="/profile/:username/following">
+          <ProfileFollowing />
+        </Route>
+      </Switch>
     </Page>
   )
 }
