@@ -47,20 +47,17 @@ function Profile() {
       })
     }
     const ourRequest = Axios.CancelToken.source()
-    console.log("---- 0")
     async function fetchProfileData() {
       try {
-        console.log("---- 1")
         const response = await Axios.post(`/addFollow/${state.profileData.profileUsername}`, { token: appState.user.token }, { cancelToken: ourRequest.token })
         // setProfileData(response.data)
-        console.log("---- 2")
         setState(draft => {
           draft.profileData.isFollowing = true
           draft.profileData.counts.followerCount++
           draft.followActionLoading = false
         })
       } catch (e) {
-        console.log("There was the problem | addFollow", e)
+        console.log("There was the problem | addFollow")
       }
     }
     fetchProfileData()
