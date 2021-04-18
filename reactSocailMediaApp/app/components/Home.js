@@ -26,7 +26,7 @@ function Home() {
           draft.feed = response.data
         })
       } catch (e) {
-        console.log("There was the problem | profile")
+        console.log("There was the problem | profileFeed")
       }
     }
     fetchProfileData()
