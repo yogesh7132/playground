@@ -60,3 +60,22 @@ test("Should be under 1600", () => {
 // toBeCloseTo (for FLOATING POINT equality )
 
 // String - check strings against regular expressions --------------
+// .not.toMatch
+test("There is no 'I' in 'team'", () => {
+  expect("team").not.toMatch(/I/i)
+})
+
+// Arrays -----------------------------------------------------------
+// toContain
+test("Admin should be in username", () => {
+  username = ["john", "karen", "admin"]
+  expect(username).toContain("admin")
+})
+
+// Working with a async data ----------------------------------------
+test("User fetched name should be Leanne Graham", () => {
+  expect.assertions(1)
+  return functions.fetchUser().then(data => {
+    expect(data.name).toEqual("Leanne Graham")
+  }, 300000)
+})
