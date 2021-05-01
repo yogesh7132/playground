@@ -4,19 +4,19 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>App</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>Show Product</title>
+    <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
-    <a href="/products/new">Add product</a>
-    <% for (let product of products){ %>
+    <a href="/products">Go Back</a>
     <div class="product">
       <h2>Name: <%= product.name %></h2>
       <h4>Price: $<%= product.price %></h4>
-      <p>Description: <%= product.desc.substring(0,75) %>...</p>
-      <a href="/products/<%= product._id %>">Show</a>
-      <br />
+      <p>Description: <%= product.desc %></p>
+      <a href="/products/<%= product._id %>/edit">Edit</a>
+      <form action="/products/<%= product._id %>?_method=DELETE" method="POST">
+        <button>DELETE</button>
+      </form>
     </div>
-    <% } %>
   </body>
 </html>
