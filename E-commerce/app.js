@@ -3,6 +3,8 @@ const mongoose = require("mongoose")
 const path = require("path")
 const productRoutes = require("./routes/product")
 const methodOveride = require("method-override")
+const session = require("express-session")
+const flash = require("connect-flash")
 // const seedDB = require("./seed")
 
 const app = express()
@@ -11,6 +13,27 @@ app.set("views"), path.join(__dirname, "views")
 app.use(express.static("public"))
 app.use(express.urlencoded({extended:true}))
 app.use(methodOveride("_method"))
+
+const sessionOptions = {
+  secret:"weak secret",
+  resave: false,
+  saveUninitialized: true,
+  cookie: { maxAge: 1000*60*60 }
+}
+app.use(session(sessionOptions))
+app.use(flash())
+
+// Middleware
+app.use((req,res,next)=>{
+  console.log(req.session.flash)
+  console.log(req.flash("success"),"---")
+  res.locals.success = req.flash("success")
+  console.log(req.session.flash)
+  console.log(res.locals.success,"--------- end \n\n")
+  // console.log(req.flash)
+  res.locals.error = req.flash("error")
+  next()
+})
 
 // Database connection
 mongoose

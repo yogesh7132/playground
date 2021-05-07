@@ -10,7 +10,8 @@ router.get("/", (req, res) => {
 // Display all  the products
 router.get("/products", async (req, res) => {
   const products = await Product.find({})
-  res.render("products/index", { products })
+  // console.log(req.session,"-----------")
+  res.render("products/index", { products, msg: req.flash("success") })
 })
 
 // Get the Form for product
@@ -22,6 +23,8 @@ router.get("/products/new", (req, res)=>{
 router.post("/products",async (req,res)=>{
   // console.log(req.body.product)
   await Product.create(req.body.product)
+  req.flash("success","Product added successfully")
+  // console.log(req.session,"-----------")
   res.redirect("/products")
 })
 
@@ -38,9 +41,10 @@ router.get("/products/:id/edit",async (req,res)=>{
   res.render("products/edit",{product})
 })
 
-// Update product
+// Edit/Update product
 router.patch("/products/:id", async(req,res)=>{
   await Product.findByIdAndUpdate(req.params.id, req.body.product)
+  req.flash("success","Post updated successfully")
   res.redirect(`/products/${req.params.id}`)
 })
 
