@@ -25,12 +25,7 @@ app.use(flash())
 
 // Middleware
 app.use((req,res,next)=>{
-  console.log(req.session.flash)
-  console.log(req.flash("success"),"---")
   res.locals.success = req.flash("success")
-  console.log(req.session.flash)
-  console.log(res.locals.success,"--------- end \n\n")
-  // console.log(req.flash)
   res.locals.error = req.flash("error")
   next()
 })

@@ -9,9 +9,16 @@ router.get("/", (req, res) => {
 
 // Display all  the products
 router.get("/products", async (req, res) => {
-  const products = await Product.find({})
-  // console.log(req.session,"-----------")
-  res.render("products/index", { products, msg: req.flash("success") })
+  try{
+    const products = await Product.find({})
+    // console.log(req.session,"-----------")
+    res.render("products/index", {products})
+  }catch(e){
+    console.log("Error : ", e)
+    req.flash("error", "Something went wrong")
+    res.redirect("/error")
+  }
+  
 })
 
 // Get the Form for product
@@ -21,52 +28,86 @@ router.get("/products/new", (req, res)=>{
 
 // Create new product
 router.post("/products",async (req,res)=>{
-  // console.log(req.body.product)
-  await Product.create(req.body.product)
-  req.flash("success","Product added successfully")
-  // console.log(req.session,"-----------")
-  res.redirect("/products")
+  try{
+    await Product.create(req.body.product)
+    req.flash("success","Product added successfully")
+    // console.log(req.session,"-----------")
+    res.redirect("/products")
+  }catch(e){
+    req.flash("error","There is a error")
+    res.redirect("/products")
+  }
+  
 })
 
 // View Single Product
 router.get("/products/:id",async (req, res)=>{
-  const product = await Product.findById(req.params.id).populate("reviews")
-  // console.log(product)
-  res.render("products/show",{product})
+  try{
+    const product = await Product.findById(req.params.id).populate("reviews")
+    // console.log(product)
+    res.render("products/show",{product})
+  }catch(e){
+    req.flash("error","There is a error")
+    res.redirect("/products")
+  }
+  
 })
 
 // Get the Edit form
 router.get("/products/:id/edit",async (req,res)=>{
-  const product = await Product.findById(req.params.id)
-  res.render("products/edit",{product})
+  try{
+    const product = await Product.findById(req.params.id)
+    res.render("products/edit",{product})
+  }catch(e){
+    req.flash("error","There is a error")
+    res.redirect("/products")
+  }
+  
 })
 
 // Edit/Update product
 router.patch("/products/:id", async(req,res)=>{
-  await Product.findByIdAndUpdate(req.params.id, req.body.product)
-  req.flash("success","Post updated successfully")
-  res.redirect(`/products/${req.params.id}`)
+  try{
+    await Product.findByIdAndUpdate(req.params.id, req.body.product)
+    req.flash("success","Post updated successfully")
+    res.redirect(`/products/${req.params.id}`)
+  }catch(e){
+    req.flash("error","There is a error")
+    res.redirect("/products")
+  }
+
 })
 
 // Delete a particular Product
 router.delete("/products/:id",async(req,res)=>{
-  await Product.findByIdAndDelete(req.params.id)
-  res.redirect("/products")
+  try{
+    await Product.findByIdAndDelete(req.params.id)
+    res.redirect("/products")
+  }catch(e){
+    req.flash("error","There is a error")
+    res.redirect("/products")
+  }
 })
 
 // Creating a New comment on products
 router.post("/products/:id/review",async (req,res)=>{
-  const product = await Product.findById(req.params.id)
+  try{
+    const product = await Product.findById(req.params.id)
   
-  const review = new Review(req.body)
-  product.reviews.push(review)
-  // console.log(review)
-  // console.log(product.reviews)
-  // console.log(product)
+    const review = new Review(req.body)
+    product.reviews.push(review)
+    // console.log(product.reviews)
+    await review.save()
+    await product.save()
+    res.redirect(`/products/${req.params.id}`)
+  }catch(e){
+    req.flash("error","There is a error")
+    res.redirect("/products")
+  }
+})
 
-  await review.save()
-  await product.save()
-  res.redirect(`/products/${req.params.id}`)
+router.get("/error",(req,res)=>{
+  res.status(404).render("error")
 })
 
 module.exports = router
