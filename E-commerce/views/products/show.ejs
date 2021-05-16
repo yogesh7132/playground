@@ -26,8 +26,21 @@
             <h1>Leave a Review</h1>
             <form action="/products/<%=product._id%>/review" method="POST" class="w-75 mt-4 needs-validation" novalidate>
                 <div class="mb-3">
+                  
                   <label for="rating" class="form-label">Rating</label>
-                  <input type="range" name="rating" id="rating" class="form-range" min=0 max=5>
+                  <fieldset class="starability-basic">
+                    <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="0" checked aria-label="No rating." />
+                    <input type="radio" id="first-rate1" name="rating" value="1" />
+                    <label for="first-rate1" title="Terrible">1 star</label>
+                    <input type="radio" id="first-rate2" name="rating" value="2" />
+                    <label for="first-rate2" title="Not good">2 stars</label>
+                    <input type="radio" id="first-rate3" name="rating" value="3" />
+                    <label for="first-rate3" title="Average">3 stars</label>
+                    <input type="radio" id="first-rate4" name="rating" value="4" />
+                    <label for="first-rate4" title="Very good">4 stars</label>
+                    <input type="radio" id="first-rate5" name="rating" value="5" />
+                    <label for="first-rate5" title="Amazing">5 stars</label>
+                  </fieldset>
                 </div>
                 <div class="mb-3">
                   <label for="desc" class="form-label">Add Comment</label>
@@ -43,8 +56,12 @@
                         <b><%= review.user %></b>
                         </div>
                         <div class="card-body">
-                        <h5 class="card-title ">Rating: <%= review.rating %></h5>
-                        <p class="card-text">Comment: <%= review.comment %></p>
+                        <h5 class="card-title">
+                            <p class="starability-result" data-rating="<%= review.rating %>">
+                              Rated: <%= review.rating %> stars
+                            </p>
+                            </h5>
+                        <p class="card-text"> <b>Comment: </b> <%= review.comment %></p>
                         </div>
                     </div>
                 <% } %>
