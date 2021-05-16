@@ -2,6 +2,7 @@ const express = require("express")
 const Product = require("../models/product")
 const Review = require("../models/review")
 const router = express.Router()
+const isLoggedIn = require("../middleware")
 
 router.get("/", (req, res) => {
   res.send("<h1>Landing page !!!</h1><a href='/products'>View Products</a>")
@@ -22,12 +23,12 @@ router.get("/products", async (req, res) => {
 })
 
 // Get the Form for product
-router.get("/products/new", (req, res)=>{
+router.get("/products/new", isLoggedIn, (req, res)=>{
   res.render("products/new")
 })
 
 // Create new product
-router.post("/products",async (req,res)=>{
+router.post("/products",isLoggedIn, async (req,res)=>{
   try{
     await Product.create(req.body.product)
     req.flash("success","Product added successfully")
@@ -54,7 +55,7 @@ router.get("/products/:id",async (req, res)=>{
 })
 
 // Get the Edit form
-router.get("/products/:id/edit",async (req,res)=>{
+router.get("/products/:id/edit",isLoggedIn ,async (req,res)=>{
   try{
     const product = await Product.findById(req.params.id)
     res.render("products/edit",{product})
@@ -66,7 +67,7 @@ router.get("/products/:id/edit",async (req,res)=>{
 })
 
 // Edit/Update product
-router.patch("/products/:id", async(req,res)=>{
+router.patch("/products/:id",isLoggedIn ,async(req,res)=>{
   try{
     await Product.findByIdAndUpdate(req.params.id, req.body.product)
     req.flash("success","Post updated successfully")
@@ -79,7 +80,7 @@ router.patch("/products/:id", async(req,res)=>{
 })
 
 // Delete a particular Product
-router.delete("/products/:id",async(req,res)=>{
+router.delete("/products/:id",isLoggedIn,async(req,res)=>{
   try{
     await Product.findByIdAndDelete(req.params.id)
     res.redirect("/products")
@@ -90,11 +91,15 @@ router.delete("/products/:id",async(req,res)=>{
 })
 
 // Creating a New comment on products
-router.post("/products/:id/review",async (req,res)=>{
+router.post("/products/:id/review",isLoggedIn,async (req,res)=>{
   try{
     const product = await Product.findById(req.params.id)
   
-    const review = new Review(req.body)
+    // const review = new Review(req.body)
+    const review = new Review({
+      user: req.user.username,
+      ...req.body
+    })
     product.reviews.push(review)
     // console.log(product.reviews)
     await review.save()

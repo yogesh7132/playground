@@ -25,7 +25,7 @@ const sessionOptions = {
   resave: false,
   saveUninitialized: true,
   cookie: { maxAge: 1000*60*60 }
-}
+}   
 app.use(session(sessionOptions))
 app.use(flash())
 
@@ -44,6 +44,7 @@ passport.deserializeUser(User.deserializeUser())
 app.use((req,res,next)=>{
   res.locals.success = req.flash("success")
   res.locals.error = req.flash("error")
+  res.locals.currentUser = req.user
   next()
 })
 
