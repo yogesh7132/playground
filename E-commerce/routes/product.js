@@ -94,7 +94,6 @@ router.delete("/products/:id",isLoggedIn,async(req,res)=>{
 router.post("/products/:id/review",isLoggedIn,async (req,res)=>{
   try{
     const product = await Product.findById(req.params.id)
-  
     // const review = new Review(req.body)
     const review = new Review({
       user: req.user.username,

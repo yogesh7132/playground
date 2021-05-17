@@ -12,9 +12,13 @@
                   <h5 class="card-title">$ <%= product.price %></h5>
                   <p class="card-text"><%= product.desc %></p>
                   <a href="#" class="btn btn-success">Buy</a>
-                  <a href="#" class="btn btn-secondary">Add to Cart</a>
-                  <a href="/products/<%= product._id %>/edit" class="btn btn-warning">Edit</a>
-                  <div class="mt-3">
+                  <div class="mt-3 d-inline-block">
+                    <form action="/cart/<%=product._id%>" method="POST">
+                      <button class="btn btn-secondary">Add to Cart</button>
+                    </form>
+                  </div>
+                  <a href="#" "></a><a href="/products/<%= product._id %>/edit" class="btn btn-warning">Edit</a>
+                  <div class="mt-3 d-inline-block">
                     <form action="/products/<%=product._id%>?_method=DELETE" method="POST">
                         <button class="btn btn-danger">Delete</button>
                       </form>
@@ -52,8 +56,8 @@
               <div class="mt-3">
                 <% for (review of product.reviews){ %>
                     <div class="card mb-3">
-                        <div class="card-header text-capitalize font-italic ">
-                        <b><%= review.user %></b>
+                        <div class="card-header text-capitalize fw-bold ">
+                          <%= review.user %>
                         </div>
                         <div class="card-body">
                         <h5 class="card-title">

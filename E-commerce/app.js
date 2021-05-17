@@ -12,6 +12,7 @@ const User = require("./models/users")
 // Routes
 const productRoutes = require("./routes/product")
 const authRoutes = require("./routes/auth")
+const cartRoutes = require("./routes/cart")
 
 const app = express()
 app.set("view engine", "ejs")
@@ -64,6 +65,7 @@ mongoose
 // Routes
 app.use(productRoutes)
 app.use(authRoutes)
+app.use(cartRoutes)
 
 app.listen("3000", () => {
   console.log("Server started at port 3000")
