@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV !== "production"){
+  require('dotenv').config()
+}
+
 const express = require("express")
 const mongoose = require("mongoose")
 const path = require("path")
@@ -51,7 +55,7 @@ app.use((req,res,next)=>{
 
 // Database connection
 mongoose
-  .connect("mongodb://localhost:27017/ecommerce", { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false  })
+  .connect(process.env.CONNECTION_STRING, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false  })
   .then(() => {
     console.log("DB Connected")
   })
@@ -67,6 +71,6 @@ app.use(productRoutes)
 app.use(authRoutes)
 app.use(cartRoutes)
 
-app.listen("3000", () => {
+app.listen(process.env.PORT || "3000", () => {
   console.log("Server started at port 3000")
 })
