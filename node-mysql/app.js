@@ -1,6 +1,7 @@
 const express = require("express")
 const path = require("path")
 const connectDb = require("./db")
+const Blog = require("./models/blog")
 
 // Connecting to the database 
 connectDb()
