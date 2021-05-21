@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog</title>
+    <style>
+        .blog-layout{
+            box-shadow: 0px 1px 2px grey;
+            padding: 10px;
+            margin: 20px 0;
+        }
+        a{
+            text-decoration: none;
+        }
+        form{
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    
+    <div style="width:80%; margin: 0 auto;">
+        <h1>Blogs | <a href="/blogs">Home</a> <a href="/blogs/new">New</a> </h1>
+        <hr>
+            <div class="blog-layout">
+                <h1><%=blog.dataValues.title%></h1>
+                <p><%=blog.body%></p>
+                <div>
+                    <a href="/blogs/<%=blog.id%>/edit">Edit</a>
+                    <form action="/blogs/<%=blog.id%>?_method=DELETE" method="POST">
+                        <button>DELETE</button>
+                    </form>
+                </div>          
+            </div>
+    </div>
+    
+        
+    
+</body>
+</html>

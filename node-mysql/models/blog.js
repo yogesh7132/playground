@@ -1,4 +1,5 @@
 const { Sequelize, DataTypes } = require('sequelize')
+// const {sequelize} = require("../db")
 
 const Blog = sequelize.define('Blog', {
     id:{

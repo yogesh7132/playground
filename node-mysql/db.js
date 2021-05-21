@@ -16,3 +16,6 @@ const connectDb = async()=>{
 
 module.exports = connectDb
 global.sequelize = sequelize
+
+// module.exports = {connectDb:connectDb, sequelize:sequelize}
+    
