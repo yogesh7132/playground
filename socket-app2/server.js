@@ -9,6 +9,22 @@ const io = socketio(server)
 
 app.use("/",express.static(path.join(__dirname,"public")))
 
+io.on("connection",(socket)=>{
+    console.log(socket.id)
+
+    socket.on("sendMsg",(data)=>{
+        console.log(`${socket.id} says -- ${data.msg}`)
+
+        // socket.emit("receivedMsg", {
+        //     msg:data.msg
+        // })
+        io.emit("receivedMsg", {
+            msg:data.msg,
+            id: data.id
+        })
+    })
+})
+
 server.listen(3000,()=>{
     console.log("Server running at port 3000")
 })
